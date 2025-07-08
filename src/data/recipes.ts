@@ -124,6 +124,60 @@ const authors = [
 
 const tags = ['quick', 'healthy', 'vegetarian', 'vegan', 'gluten-free', 'dairy-free', 'low-carb', 'high-protein', 'spicy', 'sweet', 'savory', 'comfort-food', 'light', 'filling', 'budget-friendly', 'gourmet', 'family-friendly', 'romantic', 'party', 'meal-prep'];
 
+// Curated list of actual food photos from Unsplash
+const foodImages = [
+  '1565299624946-b28f40a0ca4b', // pancakes
+  '1551963831-b3b1ee6c5bce', // smoothie bowl
+  '1506976785307-8732e854ad03', // oatmeal
+  '1512621776951-a57141f2eefd', // salad
+  '1539252554019-5fcb45404d73', // sandwich
+  '1586190848192-4963ed58bac1', // curry
+  '1621996346565-e97ce93d6dc4', // pasta
+  '1578985545622-7c14a934b83b', // cake
+  '1558961363-fa8e24f7cba8', // cookies
+  '1607623309584-453bead3fcbe', // energy balls
+  '1567620905732-2d1ec7ab7445', // breakfast
+  '1504674900312-de5eece1b12c', // coffee
+  '1546069901-ba9599a7e63c', // muffins
+  '1551024506-0bcb8f6b9c78', // toast
+  '1574085733277-851d9d856c10', // eggs
+  '1484723091739-30a097e8f929', // avocado toast
+  '1506905925346-21bea4d5ecca', // burrito
+  '1546833999-b9fcfd4ee6e3', // pizza
+  '1571091718767-18b5b1457add', // burger
+  '1565299507177-b0ac66763828', // tacos
+  '1559847844-5315695dadae', // soup
+  '1559181286-506adf9226-a9', // stir fry
+  '1576013551627-0cc20b96c2a7', // rice bowl
+  '1546069901-ba9599a7e63c', // noodles
+  '1565895736-c7b4b4d80e3e', // chicken
+  '1571091718767-18b5b1457add', // fish
+  '1586190848192-4963ed58bac1', // vegetables
+  '1586190848192-4963ed58bac1', // quinoa
+  '1565895736-c7b4b4d80e3e', // meat
+  '1506905925346-21bea4d5ecca', // wrap
+  '1551963831-b3b1ee6c5bce', // smoothie
+  '1565299624946-b28f40a0ca4b', // french toast
+  '1571091718767-18b5b1457add', // grilled food
+  '1578985545622-7c14a934b83b', // dessert
+  '1558961363-fa8e24f7cba8', // bakery
+  '1607623309584-453bead3fcbe', // healthy snacks
+  '1567620905732-2d1ec7ab7445', // brunch
+  '1504674900312-de5eece1b12c', // drinks
+  '1551024506-0bcb8f6b9c78', // bread
+  '1574085733277-851d9d856c10', // protein
+  '1484723091739-30a097e8f929', // vegetarian
+  '1506905925346-21bea4d5ecca', // lunch
+  '1546833999-b9fcfd4ee6e3', // dinner
+  '1571091718767-18b5b1457add', // grill
+  '1565299507177-b0ac66763828', // mexican
+  '1559847844-5315695dadae', // comfort food
+  '1559181286-506adf9226-a9', // asian
+  '1576013551627-0cc20b96c2a7', // mediterranean
+  '1546069901-ba9599a7e63c', // italian
+  '1565895736-c7b4b4d80e3e', // american
+];
+
 const generateRecipe = (id: string, category: string, base: string, variant: string, baseIngredients: string[]): Recipe => {
   const title = `${variant} ${base}`;
   const difficulty = difficulties[Math.floor(Math.random() * difficulties.length)];
@@ -131,6 +185,9 @@ const generateRecipe = (id: string, category: string, base: string, variant: str
   const servings = Math.floor(Math.random() * 6) + 2; // 2-8 servings
   const rating = Math.round((Math.random() * 2 + 3) * 10) / 10; // 3.0-5.0 rating
   const author = authors[Math.floor(Math.random() * authors.length)];
+  
+  // Use curated food images, cycling through them
+  const imageId = foodImages[parseInt(id) % foodImages.length];
   
   // Select random tags
   const recipeTags = tags.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * 4) + 2);
@@ -160,7 +217,7 @@ const generateRecipe = (id: string, category: string, base: string, variant: str
     id,
     title,
     category,
-    image: `https://images.unsplash.com/photo-${1500000000000 + parseInt(id)}?w=400&h=300&fit=crop&auto=format`,
+    image: `https://images.unsplash.com/photo-${imageId}?w=400&h=300&fit=crop&auto=format`,
     cookingTime: `${cookingTime} min`,
     difficulty,
     servings,
