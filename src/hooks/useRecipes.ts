@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Recipe, recipes } from '@/data/recipes';
+import { Recipe, recipes, recipeStats } from '@/data/recipes';
+import { isRecipeDuplicate } from '@/utils/recipeDeduplication';
 
 interface UseRecipesReturn {
   filteredRecipes: Recipe[];
@@ -7,11 +8,14 @@ interface UseRecipesReturn {
   loading: boolean;
   hasMore: boolean;
   totalCount: number;
+  uniqueCount: number;
+  duplicatesRemoved: number;
   loadMore: () => void;
   searchRecipes: (query: string) => void;
   filterByCategory: (category: string) => void;
   resetPagination: () => void;
   recipeCounts: Record<string, number>;
+  checkIfRecipeDuplicate: (recipe: Recipe) => { isDuplicate: boolean; reason?: string; similarRecipe?: Recipe };
 }
 
 const ITEMS_PER_PAGE = 24;
@@ -108,16 +112,23 @@ export const useRecipes = (): UseRecipesReturn => {
     setCurrentPage(1);
   }, []);
 
+  const checkIfRecipeDuplicate = useCallback((recipe: Recipe) => {
+    return isRecipeDuplicate(recipe, recipes);
+  }, []);
+
   return {
     filteredRecipes,
     displayedRecipes,
     loading,
     hasMore,
     totalCount: filteredRecipes.length,
+    uniqueCount: recipeStats.unique,
+    duplicatesRemoved: recipeStats.duplicatesRemoved,
     loadMore,
     searchRecipes,
     filterByCategory,
     resetPagination,
-    recipeCounts
+    recipeCounts,
+    checkIfRecipeDuplicate
   };
 };

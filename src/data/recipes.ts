@@ -178,7 +178,38 @@ const foodImages = [
   '1565895736-c7b4b4d80e3e', // american
 ];
 
-const generateRecipe = (id: string, category: string, base: string, variant: string, baseIngredients: string[]): Recipe => {
+// Generate unique ingredients based on dish type
+const generateUniqueIngredients = (base: string, variant: string): string[] => {
+  const baseIngredients: Record<string, string[]> = {
+    'Smoothie': ['frozen fruit', 'yogurt', 'honey', 'almond milk', 'protein powder'],
+    'Soup': ['broth', 'vegetables', 'herbs', 'onion', 'garlic', 'seasoning'],
+    'Bowl': ['quinoa', 'vegetables', 'protein', 'sauce', 'nuts', 'seeds'],
+    'Wrap': ['tortilla', 'protein', 'vegetables', 'sauce', 'cheese'],
+    'Quesadilla': ['tortilla', 'cheese', 'protein', 'peppers', 'onions'],
+    'Stir-fry': ['vegetables', 'protein', 'sauce', 'ginger', 'garlic', 'oil'],
+    'Risotto': ['arborio rice', 'broth', 'cheese', 'wine', 'onion', 'herbs'],
+    'Tacos': ['tortillas', 'protein', 'salsa', 'lettuce', 'cheese', 'lime'],
+    'Pizza': ['dough', 'sauce', 'cheese', 'toppings', 'herbs'],
+    'Burger': ['bun', 'patty', 'lettuce', 'tomato', 'onion', 'condiments']
+  };
+  
+  const ingredients = baseIngredients[base] || ['ingredient 1', 'ingredient 2', 'ingredient 3', 'ingredient 4'];
+  
+  // Add variant-specific ingredients
+  if (variant.toLowerCase().includes('spicy')) {
+    ingredients.push('chili peppers', 'hot sauce');
+  }
+  if (variant.toLowerCase().includes('mediterranean')) {
+    ingredients.push('olive oil', 'feta cheese', 'olives');
+  }
+  if (variant.toLowerCase().includes('asian')) {
+    ingredients.push('soy sauce', 'sesame oil', 'ginger');
+  }
+  
+  return ingredients.slice(0, 7); // Limit to 7 ingredients
+};
+
+const generateRecipe = (id: string, category: string, base: string, variant: string, baseIngredients: string[], customImageId?: string): Recipe => {
   const title = `${variant} ${base}`;
   const difficulty = difficulties[Math.floor(Math.random() * difficulties.length)];
   const cookingTime = Math.floor(Math.random() * 60) + 15; // 15-75 minutes
@@ -186,8 +217,8 @@ const generateRecipe = (id: string, category: string, base: string, variant: str
   const rating = Math.round((Math.random() * 2 + 3) * 10) / 10; // 3.0-5.0 rating
   const author = authors[Math.floor(Math.random() * authors.length)];
   
-  // Use curated food images, cycling through them
-  const imageId = foodImages[parseInt(id) % foodImages.length];
+  // Use provided imageId or cycle through curated food images
+  const imageId = customImageId || foodImages[parseInt(id) % foodImages.length];
   
   // Select random tags
   const recipeTags = tags.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * 4) + 2);
@@ -239,48 +270,123 @@ const generateRecipe = (id: string, category: string, base: string, variant: str
 export const generateRecipes = (): Recipe[] => {
   const recipes: Recipe[] = [];
   let idCounter = 1;
+  const usedImages = new Set<string>();
+  const usedTitles = new Set<string>();
+  
+  console.log('🍳 Starting recipe generation with duplicate prevention...');
   
   // Generate recipes for each category
   Object.entries(recipeTemplates).forEach(([category, templates]) => {
     templates.forEach(template => {
       template.variants.forEach(variant => {
         template.ingredients.forEach(ingredientSet => {
+          const title = `${variant} ${template.base}`;
+          
+          // Skip if title already exists
+          if (usedTitles.has(title.toLowerCase())) {
+            console.log(`⏭️ Skipping duplicate title: "${title}"`);
+            return;
+          }
+          
+          // Get unique image
+          let imageId: string;
+          let attempts = 0;
+          do {
+            imageId = foodImages[(idCounter + attempts) % foodImages.length];
+            attempts++;
+          } while (usedImages.has(imageId) && attempts < foodImages.length);
+          
+          if (usedImages.has(imageId)) {
+            console.log(`⚠️ Warning: Reusing image for "${title}" - all unique images exhausted`);
+          }
+          
           const recipe = generateRecipe(
             String(idCounter++).padStart(4, '0'),
             category,
             template.base,
             variant,
-            ingredientSet
+            ingredientSet,
+            imageId
           );
+          
           recipes.push(recipe);
+          usedImages.add(imageId);
+          usedTitles.add(title.toLowerCase());
         });
       });
     });
   });
   
-  // Add more unique recipes to reach 1000+
+  // Add more unique recipes with careful duplicate checking
   const additionalCategories = ['drinks', 'soups', 'vegan', 'kids', 'quick-meals'];
   const additionalBases = ['Smoothie', 'Soup', 'Bowl', 'Wrap', 'Quesadilla', 'Stir-fry', 'Risotto', 'Tacos', 'Pizza', 'Burger'];
+  const additionalVariants = ['Mediterranean', 'Asian', 'Spicy', 'Creamy', 'Herbed', 'Citrus', 'Savory', 'Fresh', 'Roasted', 'Grilled'];
   
   additionalCategories.forEach(category => {
     additionalBases.forEach(base => {
-      for (let i = 0; i < 20; i++) {
-        const variant = `Special ${i + 1}`;
-        const ingredients = ['ingredient 1', 'ingredient 2', 'ingredient 3', 'ingredient 4', 'ingredient 5'];
+      additionalVariants.forEach((variant, i) => {
+        if (i >= 10) return; // Limit to 10 variants per base
+        
+        const title = `${variant} ${base}`;
+        
+        // Skip if title already exists
+        if (usedTitles.has(title.toLowerCase())) {
+          return;
+        }
+        
+        // Generate more realistic ingredients based on the dish type
+        const ingredients = generateUniqueIngredients(base, variant);
+        
+        // Get unique image
+        let imageId: string;
+        let attempts = 0;
+        do {
+          imageId = foodImages[(idCounter + attempts) % foodImages.length];
+          attempts++;
+        } while (usedImages.has(imageId) && attempts < foodImages.length);
+        
         const recipe = generateRecipe(
           String(idCounter++).padStart(4, '0'),
           category,
           base,
           variant,
-          ingredients
+          ingredients,
+          imageId
         );
+        
         recipes.push(recipe);
-      }
+        usedImages.add(imageId);
+        usedTitles.add(title.toLowerCase());
+      });
     });
   });
   
-  return recipes.slice(0, 1200); // Ensure we have exactly 1200 recipes
+  console.log(`✅ Generated ${recipes.length} initial recipes`);
+  return recipes;
 };
 
-export const recipes = generateRecipes();
+import { deduplicateRecipes } from '@/utils/recipeDeduplication';
+
+// Generate and deduplicate recipes
+const rawRecipes = generateRecipes();
+const deduplicationResult = deduplicateRecipes(rawRecipes);
+
+// Log deduplication results
+console.log(`📊 Recipe Generation Summary:`);
+console.log(`   Initial recipes: ${rawRecipes.length}`);
+console.log(`   Unique recipes: ${deduplicationResult.uniqueRecipes.length}`);
+console.log(`   Duplicates removed: ${deduplicationResult.duplicatesRemoved}`);
+
+if (deduplicationResult.duplicateLog.length > 0) {
+  console.log(`🔍 Duplicate Detection Log:`);
+  deduplicationResult.duplicateLog.forEach(log => console.log(`   ${log}`));
+}
+
+export const recipes = deduplicationResult.uniqueRecipes;
+export const duplicateLog = deduplicationResult.duplicateLog;
+export const recipeStats = {
+  total: rawRecipes.length,
+  unique: deduplicationResult.uniqueRecipes.length,
+  duplicatesRemoved: deduplicationResult.duplicatesRemoved
+};
 export const categories = ['all', 'breakfast', 'lunch', 'dinner', 'dessert', 'snacks', 'drinks', 'soups', 'vegan', 'kids', 'quick-meals'];

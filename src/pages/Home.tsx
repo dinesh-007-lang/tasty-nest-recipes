@@ -15,6 +15,8 @@ const Home = () => {
     loading,
     hasMore,
     totalCount,
+    uniqueCount,
+    duplicatesRemoved,
     loadMore,
     searchRecipes,
     filterByCategory,
@@ -47,7 +49,12 @@ const Home = () => {
                 Welcome to TastyNest 🍽️
               </h1>
               <p className="text-muted-foreground">
-                Discover amazing recipes from our collection of {totalCount.toLocaleString()}+ dishes
+                Discover {uniqueCount.toLocaleString()} unique recipes from our curated collection
+                {duplicatesRemoved > 0 && (
+                  <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+                    {duplicatesRemoved} duplicates removed
+                  </span>
+                )}
               </p>
             </div>
             <Button
@@ -75,8 +82,13 @@ const Home = () => {
           <Card className="border-0 shadow-soft bg-gradient-warm text-primary-foreground">
             <CardContent className="p-6 text-center">
               <TrendingUp className="w-8 h-8 mx-auto mb-2" />
-              <h3 className="text-2xl font-bold">{totalCount.toLocaleString()}+</h3>
-              <p className="text-primary-foreground/80">Total Recipes</p>
+              <h3 className="text-2xl font-bold">{uniqueCount.toLocaleString()}</h3>
+              <p className="text-primary-foreground/80">Unique Recipes</p>
+              {duplicatesRemoved > 0 && (
+                <p className="text-xs text-primary-foreground/60 mt-1">
+                  {duplicatesRemoved} duplicates removed
+                </p>
+              )}
             </CardContent>
           </Card>
           
