@@ -36,7 +36,7 @@ const Home = () => {
   return <div className="min-h-screen bg-gradient-to-br from-cream via-background to-mint-light">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-primary/10 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 bg-[#1b4c1b]">
+        <div className="container mx-auto px-4 py-4 bg-gray-950">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-3xl font-bold bg-gradient-warm bg-clip-text text-white">
