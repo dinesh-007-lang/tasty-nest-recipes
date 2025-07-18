@@ -10,7 +10,9 @@ import {
   User, 
   ShoppingCart, 
   Menu,
-  ChefHat
+  ChefHat,
+  Heart,
+  LogOut
 } from 'lucide-react';
 
 export const Navigation = () => {
@@ -20,10 +22,17 @@ export const Navigation = () => {
   // Get shopping list count
   const shoppingListCount = JSON.parse(localStorage.getItem('shoppingList') || '[]').length;
 
+  const handleLogout = () => {
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('currentUser');
+    window.location.href = '/login';
+  };
+
   const navItems = [
     { icon: Home, label: 'Home', path: '/' },
     { icon: Search, label: 'Explore', path: '/explore' },
     { icon: Plus, label: 'Create', path: '/create' },
+    { icon: Heart, label: 'Favorites', path: '/favorites' },
     { icon: User, label: 'Profile', path: '/profile' },
     { 
       icon: ShoppingCart, 
@@ -113,6 +122,15 @@ export const Navigation = () => {
                   {navItems.map((item) => (
                     <NavLink key={item.path} item={item} mobile />
                   ))}
+                  
+                  <Button
+                    variant="outline"
+                    onClick={handleLogout}
+                    className="w-full justify-start text-destructive border-destructive/20 hover:bg-destructive hover:text-destructive-foreground"
+                  >
+                    <LogOut className="w-5 h-5 mr-3" />
+                    Sign Out
+                  </Button>
                 </div>
               </SheetContent>
             </Sheet>
@@ -121,8 +139,8 @@ export const Navigation = () => {
 
         {/* Bottom Navigation */}
         <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-t border-primary/10 px-4 py-2">
-          <div className="flex items-center justify-around max-w-md mx-auto">
-            {navItems.slice(0, 4).map((item) => {
+          <div className="flex items-center justify-around max-w-lg mx-auto">
+            {navItems.slice(0, 5).map((item) => {
               const isActive = location.pathname === item.path;
               const Icon = item.icon;
               
