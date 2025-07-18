@@ -8,7 +8,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Shuffle, TrendingUp, Clock } from 'lucide-react';
 import heroImage from '@/assets/hero-image.jpg';
-
 const Home = () => {
   const {
     displayedRecipes,
@@ -22,14 +21,11 @@ const Home = () => {
     filterByCategory,
     recipeCounts
   } = useRecipes();
-
   const [selectedCategory, setSelectedCategory] = useState('all');
-
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
     filterByCategory(category);
   };
-
   const getRandomRecipe = () => {
     const randomIndex = Math.floor(Math.random() * displayedRecipes.length);
     const randomRecipe = displayedRecipes[randomIndex];
@@ -37,46 +33,34 @@ const Home = () => {
       window.location.href = `/recipe/${randomRecipe.id}`;
     }
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-cream via-background to-mint-light">
+  return <div className="min-h-screen bg-gradient-to-br from-cream via-background to-mint-light">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-primary/10 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-4 bg-[#1b4c1b]">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-warm bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-gradient-warm bg-clip-text text-white">
                 Welcome to TastyNest 🍽️
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-[#752d2d]">
                 Discover {uniqueCount.toLocaleString()} unique recipes from our curated collection
-                {duplicatesRemoved > 0 && (
-                  <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+                {duplicatesRemoved > 0 && <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-1 rounded">
                     {duplicatesRemoved} duplicates removed
-                  </span>
-                )}
+                  </span>}
               </p>
             </div>
-            <Button
-              onClick={getRandomRecipe}
-              variant="outline"
-              className="border-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-            >
+            <Button onClick={getRandomRecipe} variant="outline" className="border-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300">
               <Shuffle className="w-4 h-4 mr-2" />
               Surprise Me!
             </Button>
           </div>
           
-          <SearchBar 
-            onSearch={searchRecipes}
-            placeholder="Search by recipe name, ingredients, or tags..."
-            className="max-w-2xl mx-auto"
-          />
+          <SearchBar onSearch={searchRecipes} placeholder="Search by recipe name, ingredients, or tags..." className="max-w-2xl mx-auto" />
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 bg-[#1e4c1e]">
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <Card className="border-0 shadow-soft bg-gradient-warm text-primary-foreground">
@@ -84,11 +68,9 @@ const Home = () => {
               <TrendingUp className="w-8 h-8 mx-auto mb-2" />
               <h3 className="text-2xl font-bold">{uniqueCount.toLocaleString()}</h3>
               <p className="text-primary-foreground/80">Unique Recipes</p>
-              {duplicatesRemoved > 0 && (
-                <p className="text-xs text-primary-foreground/60 mt-1">
+              {duplicatesRemoved > 0 && <p className="text-xs text-primary-foreground/60 mt-1">
                   {duplicatesRemoved} duplicates removed
-                </p>
-              )}
+                </p>}
             </CardContent>
           </Card>
           
@@ -117,34 +99,20 @@ const Home = () => {
               {selectedCategory === 'all' ? 'All Categories' : selectedCategory.replace('-', ' ')}
             </Badge>
           </div>
-          <CategoryFilters
-            selectedCategory={selectedCategory}
-            onCategoryChange={handleCategoryChange}
-            recipeCounts={recipeCounts}
-          />
+          <CategoryFilters selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} recipeCounts={recipeCounts} />
         </div>
 
         {/* Results Summary */}
         <div className="mb-6">
           <p className="text-muted-foreground">
             Showing {displayedRecipes.length} of {totalCount} recipes
-            {selectedCategory !== 'all' && (
-              <span> in <strong className="text-primary">{selectedCategory.replace('-', ' ')}</strong></span>
-            )}
+            {selectedCategory !== 'all' && <span> in <strong className="text-primary">{selectedCategory.replace('-', ' ')}</strong></span>}
           </p>
         </div>
 
         {/* Recipe Grid */}
-        <RecipeGrid
-          recipes={displayedRecipes}
-          loading={loading}
-          hasMore={hasMore}
-          onLoadMore={loadMore}
-          emptyMessage="No recipes found. Try adjusting your search or browse different categories."
-        />
+        <RecipeGrid recipes={displayedRecipes} loading={loading} hasMore={hasMore} onLoadMore={loadMore} emptyMessage="No recipes found. Try adjusting your search or browse different categories." />
       </main>
-    </div>
-  );
+    </div>;
 };
-
 export default Home;
