@@ -89,7 +89,7 @@ const Favorites = () => {
             <CardContent className="p-12 text-center">
               <Heart className="w-24 h-24 mx-auto text-muted-foreground mb-6" />
               <h2 className="text-3xl font-bold mb-4">No Favorites Yet</h2>
-              <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+              <p className="text-lg mb-8 leading-relaxed text-gray-950">
                 Start exploring our amazing recipes and add them to your favorites by clicking the heart icon. 
                 Your saved recipes will appear here for easy access.
               </p>
