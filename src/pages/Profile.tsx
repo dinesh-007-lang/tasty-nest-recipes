@@ -11,29 +11,27 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { RecipeGrid } from '@/components/RecipeGrid';
 import { Edit, User, ChefHat, Heart, BookOpen, Camera } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
 interface UserProfile {
   name: string;
   bio: string;
   avatar: string;
   joinDate: string;
 }
-
 const Profile = () => {
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [user, setUser] = useState<UserProfile>({
     name: 'Food Enthusiast',
     bio: 'Passionate home cook sharing delicious recipes with the community. Love experimenting with flavors and creating memorable meals.',
     avatar: '',
     joinDate: new Date().toLocaleDateString()
   });
-  
   const [editedUser, setEditedUser] = useState(user);
   const [isEditing, setIsEditing] = useState(false);
   const [userRecipes, setUserRecipes] = useState<Recipe[]>([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
   const [draftRecipes, setDraftRecipes] = useState<Recipe[]>([]);
-
   useEffect(() => {
     // Load user profile
     const savedProfile = localStorage.getItem('userProfile');
@@ -56,67 +54,55 @@ const Profile = () => {
     const favorites = recipes.filter(recipe => favoriteIds.includes(recipe.id));
     setFavoriteRecipes(favorites);
   }, []);
-
   const saveProfile = () => {
     setUser(editedUser);
     localStorage.setItem('userProfile', JSON.stringify(editedUser));
     setIsEditing(false);
-    
     toast({
       title: "Profile Updated",
       description: "Your profile has been saved successfully!"
     });
   };
-
   const cancelEdit = () => {
     setEditedUser(user);
     setIsEditing(false);
   };
-
   const deleteDraft = (recipeId: string) => {
     const updatedDrafts = draftRecipes.filter(recipe => recipe.id !== recipeId);
     setDraftRecipes(updatedDrafts);
     localStorage.setItem('draftRecipes', JSON.stringify(updatedDrafts));
-    
     toast({
       title: "Draft Deleted",
       description: "Recipe draft has been removed"
     });
   };
-
   const publishDraft = (recipeId: string) => {
     const draftToPublish = draftRecipes.find(recipe => recipe.id === recipeId);
     if (draftToPublish) {
       // Move from drafts to published recipes
       const updatedDrafts = draftRecipes.filter(recipe => recipe.id !== recipeId);
       const updatedUserRecipes = [...userRecipes, draftToPublish];
-      
       setDraftRecipes(updatedDrafts);
       setUserRecipes(updatedUserRecipes);
-      
       localStorage.setItem('draftRecipes', JSON.stringify(updatedDrafts));
       localStorage.setItem('userRecipes', JSON.stringify(updatedUserRecipes));
-      
       toast({
         title: "Recipe Published",
         description: "Your recipe is now live!"
       });
     }
   };
-
   const allUserRecipes = [...userRecipes, ...draftRecipes];
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-cream via-background to-mint-light">
-      <div className="container mx-auto px-4 py-8">
+  return <div className="min-h-screen bg-gradient-to-br from-cream via-background to-mint-light">
+      <div className="container mx-auto px-4 py-8 bg-slate-950">
         {/* Profile Header */}
         <Card className="border-0 shadow-warm mb-8">
-          <CardContent className="p-8">
+          <CardContent className="p-8 bg-gray-300">
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
               <Avatar className="w-32 h-32 border-4 border-primary/20">
                 <AvatarImage src={user.avatar} />
-                <AvatarFallback className="text-2xl bg-gradient-warm text-primary-foreground">
-                  <User className="w-12 h-12" />
+                <AvatarFallback className="text-2xl bg-gradient-warm text-neutral-950">
+                  <User className="w-12 h-12 bg-transparent" />
                 </AvatarFallback>
               </Avatar>
               
@@ -137,26 +123,24 @@ const Profile = () => {
                       <div className="space-y-4">
                         <div>
                           <label className="block text-sm font-medium mb-2">Name</label>
-                          <Input
-                            value={editedUser.name}
-                            onChange={(e) => setEditedUser(prev => ({ ...prev, name: e.target.value }))}
-                          />
+                          <Input value={editedUser.name} onChange={e => setEditedUser(prev => ({
+                          ...prev,
+                          name: e.target.value
+                        }))} />
                         </div>
                         <div>
                           <label className="block text-sm font-medium mb-2">Bio</label>
-                          <Textarea
-                            value={editedUser.bio}
-                            onChange={(e) => setEditedUser(prev => ({ ...prev, bio: e.target.value }))}
-                            rows={4}
-                          />
+                          <Textarea value={editedUser.bio} onChange={e => setEditedUser(prev => ({
+                          ...prev,
+                          bio: e.target.value
+                        }))} rows={4} />
                         </div>
                         <div>
                           <label className="block text-sm font-medium mb-2">Avatar URL</label>
-                          <Input
-                            placeholder="Enter image URL..."
-                            value={editedUser.avatar}
-                            onChange={(e) => setEditedUser(prev => ({ ...prev, avatar: e.target.value }))}
-                          />
+                          <Input placeholder="Enter image URL..." value={editedUser.avatar} onChange={e => setEditedUser(prev => ({
+                          ...prev,
+                          avatar: e.target.value
+                        }))} />
                         </div>
                         <div className="flex gap-2 pt-4">
                           <Button onClick={saveProfile} className="flex-1">
@@ -171,7 +155,7 @@ const Profile = () => {
                   </Dialog>
                 </div>
                 
-                <p className="text-muted-foreground mb-4 max-w-2xl">{user.bio}</p>
+                <p className="mb-4 max-w-2xl text-gray-950">{user.bio}</p>
                 
                 <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                   <div className="text-center">
@@ -179,7 +163,7 @@ const Profile = () => {
                       <ChefHat className="w-5 h-5 text-primary" />
                       <span className="font-semibold text-2xl">{allUserRecipes.length}</span>
                     </div>
-                    <p className="text-sm text-muted-foreground">Recipes Created</p>
+                    <p className="text-sm text-gray-950">Recipes Created</p>
                   </div>
                   
                   <div className="text-center">
@@ -187,7 +171,7 @@ const Profile = () => {
                       <Heart className="w-5 h-5 text-primary" />
                       <span className="font-semibold text-2xl">{favoriteRecipes.length}</span>
                     </div>
-                    <p className="text-sm text-muted-foreground">Favorites</p>
+                    <p className="text-sm text-gray-950">Favorites</p>
                   </div>
                   
                   <div className="text-center">
@@ -195,7 +179,7 @@ const Profile = () => {
                       <BookOpen className="w-5 h-5 text-primary" />
                       <span className="font-semibold text-2xl">{draftRecipes.length}</span>
                     </div>
-                    <p className="text-sm text-muted-foreground">Drafts</p>
+                    <p className="text-sm text-slate-950">Drafts</p>
                   </div>
                 </div>
               </div>
@@ -206,13 +190,13 @@ const Profile = () => {
         {/* Recipe Tabs */}
         <Tabs defaultValue="my-recipes" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 bg-white shadow-soft">
-            <TabsTrigger value="my-recipes" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsTrigger value="my-recipes" className="data-[state=active]:bg-primary text-gray-950">
               My Recipes ({userRecipes.length})
             </TabsTrigger>
-            <TabsTrigger value="favorites" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsTrigger value="favorites" className="data-[state=active]:bg-primary text-slate-950">
               Favorites ({favoriteRecipes.length})
             </TabsTrigger>
-            <TabsTrigger value="drafts" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsTrigger value="drafts" className="data-[state=active]:bg-primary text-gray-950">
               Drafts ({draftRecipes.length})
             </TabsTrigger>
           </TabsList>
@@ -226,13 +210,7 @@ const Profile = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {userRecipes.length > 0 ? (
-                  <RecipeGrid 
-                    recipes={userRecipes} 
-                    emptyMessage="You haven't published any recipes yet. Create your first recipe to get started!"
-                  />
-                ) : (
-                  <div className="text-center py-12">
+                {userRecipes.length > 0 ? <RecipeGrid recipes={userRecipes} emptyMessage="You haven't published any recipes yet. Create your first recipe to get started!" /> : <div className="text-center py-12 bg-sky-100">
                     <ChefHat className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
                     <h3 className="text-xl font-semibold mb-2">No published recipes yet</h3>
                     <p className="text-muted-foreground mb-4">
@@ -241,8 +219,7 @@ const Profile = () => {
                     <Button onClick={() => window.location.href = '/create'}>
                       Create Your First Recipe
                     </Button>
-                  </div>
-                )}
+                  </div>}
               </CardContent>
             </Card>
           </TabsContent>
@@ -256,13 +233,7 @@ const Profile = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {favoriteRecipes.length > 0 ? (
-                  <RecipeGrid 
-                    recipes={favoriteRecipes} 
-                    emptyMessage="You haven't favorited any recipes yet. Explore recipes and save your favorites!"
-                  />
-                ) : (
-                  <div className="text-center py-12">
+                {favoriteRecipes.length > 0 ? <RecipeGrid recipes={favoriteRecipes} emptyMessage="You haven't favorited any recipes yet. Explore recipes and save your favorites!" /> : <div className="text-center py-12">
                     <Heart className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
                     <h3 className="text-xl font-semibold mb-2">No favorite recipes yet</h3>
                     <p className="text-muted-foreground mb-4">
@@ -271,8 +242,7 @@ const Profile = () => {
                     <Button onClick={() => window.location.href = '/'} variant="outline">
                       Explore Recipes
                     </Button>
-                  </div>
-                )}
+                  </div>}
               </CardContent>
             </Card>
           </TabsContent>
@@ -286,16 +256,10 @@ const Profile = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {draftRecipes.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {draftRecipes.map((recipe) => (
-                      <Card key={recipe.id} className="border-0 shadow-soft hover:shadow-warm transition-all duration-300">
+                {draftRecipes.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {draftRecipes.map(recipe => <Card key={recipe.id} className="border-0 shadow-soft hover:shadow-warm transition-all duration-300">
                         <div className="relative">
-                          <img
-                            src={recipe.image}
-                            alt={recipe.title}
-                            className="w-full h-48 object-cover rounded-t-lg"
-                          />
+                          <img src={recipe.image} alt={recipe.title} className="w-full h-48 object-cover rounded-t-lg" />
                           <Badge className="absolute top-3 right-3 bg-yellow-500 text-yellow-50">
                             Draft
                           </Badge>
@@ -306,28 +270,16 @@ const Profile = () => {
                             {recipe.category} • {recipe.cookingTime} • {recipe.servings} servings
                           </p>
                           <div className="flex gap-2">
-                            <Button
-                              size="sm"
-                              onClick={() => publishDraft(recipe.id)}
-                              className="flex-1"
-                            >
+                            <Button size="sm" onClick={() => publishDraft(recipe.id)} className="flex-1">
                               Publish
                             </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => deleteDraft(recipe.id)}
-                              className="flex-1"
-                            >
+                            <Button variant="outline" size="sm" onClick={() => deleteDraft(recipe.id)} className="flex-1">
                               Delete
                             </Button>
                           </div>
                         </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
+                      </Card>)}
+                  </div> : <div className="text-center py-12">
                     <BookOpen className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
                     <h3 className="text-xl font-semibold mb-2">No draft recipes</h3>
                     <p className="text-muted-foreground mb-4">
@@ -336,15 +288,12 @@ const Profile = () => {
                     <Button onClick={() => window.location.href = '/create'} variant="outline">
                       Create New Recipe
                     </Button>
-                  </div>
-                )}
+                  </div>}
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Profile;
