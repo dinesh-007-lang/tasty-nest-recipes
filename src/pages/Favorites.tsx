@@ -82,10 +82,10 @@ const Favorites = () => {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 text-amber-950">
         {favoriteRecipes.length === 0 ?
       // Empty State
-      <Card className="border-0 shadow-warm max-w-2xl mx-auto">
+      <Card className="border-0 shadow-warm max-w-2xl mx-auto text-slate-950">
             <CardContent className="p-12 text-center">
               <Heart className="w-24 h-24 mx-auto text-muted-foreground mb-6" />
               <h2 className="text-3xl font-bold mb-4">No Favorites Yet</h2>
@@ -117,7 +117,7 @@ const Favorites = () => {
 
             {filteredRecipes.length === 0 && searchQuery ?
         // No Search Results
-        <Card className="border-0 shadow-soft">
+        <Card className="border-0 shadow-soft text-zinc-950">
                 <CardContent className="p-12 text-center">
                   <Search className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
                   <h3 className="text-xl font-semibold mb-2">No Results Found</h3>
