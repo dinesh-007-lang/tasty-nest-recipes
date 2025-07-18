@@ -60,11 +60,11 @@ const Home = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 bg-[#1e4c1e]">
+      <main className="container mx-auto px-4 py-8 bg-slate-200">
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <Card className="border-0 shadow-soft bg-gradient-warm text-primary-foreground">
-            <CardContent className="p-6 text-center">
+            <CardContent className="p-6 text-center bg-red-700">
               <TrendingUp className="w-8 h-8 mx-auto mb-2" />
               <h3 className="text-2xl font-bold">{uniqueCount.toLocaleString()}</h3>
               <p className="text-primary-foreground/80">Unique Recipes</p>
@@ -75,7 +75,7 @@ const Home = () => {
           </Card>
           
           <Card className="border-0 shadow-soft bg-gradient-cool text-white">
-            <CardContent className="p-6 text-center">
+            <CardContent className="p-6 text-center bg-lime-900">
               <Clock className="w-8 h-8 mx-auto mb-2" />
               <h3 className="text-2xl font-bold">25</h3>
               <p className="text-white/80">Avg Cook Time (min)</p>
@@ -83,7 +83,7 @@ const Home = () => {
           </Card>
           
           <Card className="border-0 shadow-soft bg-sage text-white">
-            <CardContent className="p-6 text-center">
+            <CardContent className="p-6 text-center bg-green-800">
               <span className="text-3xl mb-2 block">⭐</span>
               <h3 className="text-2xl font-bold">4.2</h3>
               <p className="text-white/80">Average Rating</p>
