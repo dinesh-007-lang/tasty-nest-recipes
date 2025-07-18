@@ -8,16 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { 
-  Shuffle, 
-  TrendingUp, 
-  Clock, 
-  Star, 
-  Filter,
-  SlidersHorizontal,
-  Search
-} from 'lucide-react';
-
+import { Shuffle, TrendingUp, Clock, Star, Filter, SlidersHorizontal, Search } from 'lucide-react';
 const Explore = () => {
   const {
     displayedRecipes,
@@ -30,17 +21,14 @@ const Explore = () => {
     filterByCategory,
     recipeCounts
   } = useRecipes();
-
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [difficultyFilter, setDifficultyFilter] = useState('all');
   const [maxCookTime, setMaxCookTime] = useState('');
-
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
     filterByCategory(category);
   };
-
   const getRandomRecipe = () => {
     const randomIndex = Math.floor(Math.random() * displayedRecipes.length);
     const randomRecipe = displayedRecipes[randomIndex];
@@ -48,7 +36,6 @@ const Explore = () => {
       window.location.href = `/recipe/${randomRecipe.id}`;
     }
   };
-
   const clearFilters = () => {
     setSelectedCategory('all');
     setDifficultyFilter('all');
@@ -59,24 +46,17 @@ const Explore = () => {
   };
 
   // Filter featured/trending recipes (highest rated)
-  const featuredRecipes = displayedRecipes
-    .filter(recipe => recipe.rating >= 4.5)
-    .slice(0, 8);
-
-  const quickMeals = displayedRecipes
-    .filter(recipe => {
-      const time = parseInt(recipe.cookingTime);
-      return time <= 30;
-    })
-    .slice(0, 8);
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-cream via-background to-mint-light">
+  const featuredRecipes = displayedRecipes.filter(recipe => recipe.rating >= 4.5).slice(0, 8);
+  const quickMeals = displayedRecipes.filter(recipe => {
+    const time = parseInt(recipe.cookingTime);
+    return time <= 30;
+  }).slice(0, 8);
+  return <div className="min-h-screen bg-gradient-to-br from-cream via-background to-mint-light">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-primary/10 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-6">
           <div className="text-center mb-6">
-            <h1 className="text-4xl font-bold bg-gradient-warm bg-clip-text text-transparent mb-2">
+            <h1 className="text-4xl font-bold bg-gradient-warm bg-clip-text mb-2 text-orange-900">
               Explore Recipes 🔍
             </h1>
             <p className="text-muted-foreground text-lg">
@@ -85,16 +65,8 @@ const Explore = () => {
           </div>
           
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <SearchBar 
-              onSearch={searchRecipes}
-              placeholder="Search by recipe name, ingredients, or tags..."
-              className="flex-1 max-w-2xl"
-            />
-            <Button
-              onClick={getRandomRecipe}
-              variant="outline"
-              className="border-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 whitespace-nowrap"
-            >
+            <SearchBar onSearch={searchRecipes} placeholder="Search by recipe name, ingredients, or tags..." className="flex-1 max-w-2xl" />
+            <Button onClick={getRandomRecipe} variant="outline" className="border-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 whitespace-nowrap">
               <Shuffle className="w-4 h-4 mr-2" />
               Surprise Me!
             </Button>
@@ -105,22 +77,13 @@ const Explore = () => {
       <div className="container mx-auto px-4 py-8">
         <Tabs defaultValue="all" className="space-y-8">
           <TabsList className="grid w-full grid-cols-3 bg-white shadow-soft">
-            <TabsTrigger 
-              value="all" 
-              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
+            <TabsTrigger value="all" className="data-[state=active]:bg-primary text-zinc-950">
               All Recipes
             </TabsTrigger>
-            <TabsTrigger 
-              value="featured" 
-              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
+            <TabsTrigger value="featured" className="data-[state=active]:bg-primary text-zinc-950">
               Featured ({featuredRecipes.length})
             </TabsTrigger>
-            <TabsTrigger 
-              value="quick" 
-              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
+            <TabsTrigger value="quick" className="data-[state=active]:bg-primary text-zinc-950">
               Quick Meals ({quickMeals.length})
             </TabsTrigger>
           </TabsList>
@@ -170,11 +133,7 @@ const Explore = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                   <div>
                     <label className="block text-sm font-medium mb-2">Difficulty</label>
-                    <select 
-                      value={difficultyFilter}
-                      onChange={(e) => setDifficultyFilter(e.target.value)}
-                      className="w-full p-2 border border-input rounded-md bg-background"
-                    >
+                    <select value={difficultyFilter} onChange={e => setDifficultyFilter(e.target.value)} className="w-full p-2 border border-input rounded-md bg-background">
                       <option value="all">All Levels</option>
                       <option value="Easy">Easy</option>
                       <option value="Medium">Medium</option>
@@ -184,21 +143,12 @@ const Explore = () => {
 
                   <div>
                     <label className="block text-sm font-medium mb-2">Max Cook Time</label>
-                    <Input
-                      type="number"
-                      placeholder="Minutes"
-                      value={maxCookTime}
-                      onChange={(e) => setMaxCookTime(e.target.value)}
-                    />
+                    <Input type="number" placeholder="Minutes" value={maxCookTime} onChange={e => setMaxCookTime(e.target.value)} />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-2">Sort By</label>
-                    <select 
-                      value={sortBy}
-                      onChange={(e) => setSortBy(e.target.value)}
-                      className="w-full p-2 border border-input rounded-md bg-background"
-                    >
+                    <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="w-full p-2 border border-input rounded-md bg-background">
                       <option value="newest">Newest</option>
                       <option value="rating">Highest Rated</option>
                       <option value="time">Cook Time</option>
@@ -213,11 +163,7 @@ const Explore = () => {
                   </div>
                 </div>
 
-                <CategoryFilters
-                  selectedCategory={selectedCategory}
-                  onCategoryChange={handleCategoryChange}
-                  recipeCounts={recipeCounts}
-                />
+                <CategoryFilters selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} recipeCounts={recipeCounts} />
               </CardContent>
             </Card>
 
@@ -225,9 +171,7 @@ const Explore = () => {
             <div className="flex items-center justify-between">
               <p className="text-muted-foreground">
                 Showing {displayedRecipes.length} of {totalCount} recipes
-                {selectedCategory !== 'all' && (
-                  <span> in <strong className="text-primary">{selectedCategory.replace('-', ' ')}</strong></span>
-                )}
+                {selectedCategory !== 'all' && <span> in <strong className="text-primary">{selectedCategory.replace('-', ' ')}</strong></span>}
               </p>
               <Button variant="ghost" size="sm">
                 <SlidersHorizontal className="w-4 h-4 mr-2" />
@@ -236,13 +180,7 @@ const Explore = () => {
             </div>
 
             {/* Recipe Grid */}
-            <RecipeGrid
-              recipes={displayedRecipes}
-              loading={loading}
-              hasMore={hasMore}
-              onLoadMore={loadMore}
-              emptyMessage="No recipes found. Try adjusting your search or filters."
-            />
+            <RecipeGrid recipes={displayedRecipes} loading={loading} hasMore={hasMore} onLoadMore={loadMore} emptyMessage="No recipes found. Try adjusting your search or filters." />
           </TabsContent>
 
           {/* Featured Recipes Tab */}
@@ -257,10 +195,7 @@ const Explore = () => {
                   </p>
                 </div>
                 
-                <RecipeGrid
-                  recipes={featuredRecipes}
-                  emptyMessage="No featured recipes available at the moment. Check back soon!"
-                />
+                <RecipeGrid recipes={featuredRecipes} emptyMessage="No featured recipes available at the moment. Check back soon!" />
               </CardContent>
             </Card>
           </TabsContent>
@@ -277,17 +212,12 @@ const Explore = () => {
                   </p>
                 </div>
                 
-                <RecipeGrid
-                  recipes={quickMeals}
-                  emptyMessage="No quick meals found. Try browsing our full collection!"
-                />
+                <RecipeGrid recipes={quickMeals} emptyMessage="No quick meals found. Try browsing our full collection!" />
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Explore;
